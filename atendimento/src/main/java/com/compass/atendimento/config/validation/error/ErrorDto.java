@@ -1,8 +1,9 @@
 package com.compass.atendimento.config.validation.error;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-
+@AllArgsConstructor
 public class ErrorDto {
 
     @Getter
@@ -10,11 +11,6 @@ public class ErrorDto {
 
     @Getter
     private String erro;
-    
-	public ErrorDto(String campo, String erro) {
-		this.campo = campo;
-		this.erro = erro;
-	}
     
     
 }
