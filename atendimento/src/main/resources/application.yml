@@ -4,7 +4,23 @@ server:
 spring:
     application:
         name: "atendimento"
-
+    datasource:
+      driverClassName: org.h2.Driver
+      url: 'jdbc:h2:mem:avaliacao-partido'
+      username: sa
+    jpa:
+      database-platform: org.hibernate.dialect.H2Dialect
+      hibernate:
+        ddl-auto: update
+      properties:
+        hibernate:
+          show_sql: true
+          format_sql: true
+    h2:
+      console:
+        enabled: true
+        path: /h2-console
+        
     mvc:
       pathmatch:
             matching-strategy: ant-path-matcher
