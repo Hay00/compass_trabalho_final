@@ -20,7 +20,4 @@ public class ContaForm {
 		return null;
     }
     
-    public Conta atualizar() {
-    	return null;
-    }
 }

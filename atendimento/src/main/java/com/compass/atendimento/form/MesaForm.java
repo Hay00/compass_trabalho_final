@@ -13,7 +13,4 @@ public class MesaForm {
 		return null;
     }
     
-    public Mesa atualizar() {
-    	return null;
-    }
 }
