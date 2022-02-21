@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,20 +17,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Mesa {
-	
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @NotNull
-    private boolean status;
-    
-    @OneToMany
-    private List<Conta> conta;
-    
-	public Mesa(boolean status, List<Conta> conta) {
-		this.status = status;
-		this.conta = conta;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	private boolean ocupada = false;
+
+	@OneToMany(mappedBy = "mesa")
+	private List<Conta> contas;
+
+	public Mesa(boolean status) {
+		this.ocupada = status;
 	}
-    
-    
 }

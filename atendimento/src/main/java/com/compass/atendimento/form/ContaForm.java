@@ -10,17 +10,18 @@ import lombok.Setter;
 
 @Setter
 public class ContaForm {
-    
+
+	@NotNull
+	private Long idMesa;
+
+	@NotNull
+	private boolean status;
+
 	@NotNull
 	private BigDecimal valorTotal;
-    @NotNull
-    private boolean status;
-    
-    public Conta converter() {
-		return null;
-    }
-    
-    public Conta atualizar() {
-    	return null;
-    }
+
+	public Conta converter() {
+		return new Conta(idMesa, valorTotal, status);
+	}
+
 }
