@@ -14,17 +14,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PedidoDto {
-	
-    private Long id;
-    private String statusPedido;
-    private BigDecimal valorTotal;
-    
+
+	private Long id;
+	private Long conta;
+	private String statusPedido;
+	private BigDecimal valorTotal;
+
 	public PedidoDto(Pedido pedido) {
 		this.id = pedido.getId();
 		this.statusPedido = pedido.getStatusPedido();
 		this.valorTotal = pedido.getValorTotal();
+		this.conta = pedido.getConta().getId();
 	}
-    
+
 	public static List<PedidoDto> converter(List<Pedido> pedidos) {
 		return pedidos.stream().map(PedidoDto::new).collect(Collectors.toList());
 	}
