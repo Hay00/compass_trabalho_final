@@ -1,9 +1,12 @@
 package com.compass.gerenciamento.model;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -22,7 +25,14 @@ public class Cardapio {
     private Long id;
     @NotNull @NotEmpty
     private String nome;
-    //List <ItemPedido> produtos;
     
-    //Adicionar construtor sem id quando decidir sobre ItemPedido
+    @OneToMany
+    private List<Produto> produtos;
+
+	public Cardapio(String nome, List<Produto> produto) {
+		this.nome = nome;
+		this.produtos = produto;
+	}
+    
+    
 }

@@ -3,6 +3,8 @@ package com.compass.gerenciamento.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+
 import com.compass.gerenciamento.model.Produto;
 
 import lombok.Getter;
@@ -24,7 +26,7 @@ public class ProdutoDto {
     	this.status = produto.isStatus();
     }
     
-    public static List<ProdutoDto> converter(List<Produto> produtos) {
+    public static List<ProdutoDto> convert(List<Produto> produtos) {
 		return produtos.stream().map(ProdutoDto::new).collect(Collectors.toList());
 	}
 }
