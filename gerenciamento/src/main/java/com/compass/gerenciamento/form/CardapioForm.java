@@ -13,13 +13,14 @@ import lombok.Setter;
 
 @Setter
 public class CardapioForm {
-    
-	@NotNull @NotEmpty
-    private String nome;
-    //private List<Produto> produto;
-	
+
+	@NotNull
+	@NotEmpty
+	private String nome;
+	// private List<Produto> produto;
+
 	public Cardapio convert() {
 		return new Cardapio(nome, new ArrayList<>());
-    }
-    
+	}
+
 }
