@@ -31,13 +31,14 @@ public class MesaController {
 
 	@GetMapping
 	public List<MesaDto> all() {
+		// TODO: Implementar filtro com somente contas ativas
 		return MesaDto.converter(mesaRepository.findAll());
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<MesaDto> one(@PathVariable Long id) {
-		return mesaRepository.findById(id)
-				.map(mesa -> ResponseEntity.ok(new MesaDto(mesa)))
+		// TODO: Implementar filtro com somente contas ativas
+		return mesaRepository.findById(id).map(mesa -> ResponseEntity.ok(new MesaDto(mesa)))
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
@@ -52,22 +53,20 @@ public class MesaController {
 	@PutMapping("/{id}")
 	public ResponseEntity<MesaDto> updateMesa(@PathVariable Long id, @RequestBody @Valid MesaForm form) {
 		Mesa mesaForm = form.converter();
-		return mesaRepository.findById(id)
-				.map(mesa -> {
-					mesa.setOcupada(mesaForm.isOcupada());
-					mesaRepository.save(mesa);
-					return ResponseEntity.ok(new MesaDto(mesa));
-				})
-				.orElseGet(() -> ResponseEntity.notFound().build());
+		return mesaRepository.findById(id).map(mesa -> {
+			mesa.setNumero(mesaForm.getNumero());
+			mesa.setCapacidade(mesaForm.getCapacidade());
+			mesa.setOcupada(mesaForm.isOcupada());
+			mesaRepository.save(mesa);
+			return ResponseEntity.ok(new MesaDto(mesa));
+		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Object> deleteMesa(@PathVariable Long id) {
-		return mesaRepository.findById(id)
-				.map(mesa -> {
-					mesaRepository.deleteById(id);
-					return ResponseEntity.ok().build();
-				})
-				.orElseGet(() -> ResponseEntity.notFound().build());
+		return mesaRepository.findById(id).map(mesa -> {
+			mesaRepository.deleteById(id);
+			return ResponseEntity.ok().build();
+		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 }

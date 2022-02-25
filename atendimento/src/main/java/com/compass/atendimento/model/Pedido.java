@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class Pedido {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotNull
 	private String statusPedido;
 
 	private BigDecimal valorTotal;
@@ -30,12 +32,12 @@ public class Pedido {
 	private Conta conta;
 
 	// TODO: Lista de produtos
+	// @OneToMany
 	// private List<Produto> produtos;
 
-	public Pedido(String statusPedido, BigDecimal valorTotal, Conta conta) {
+	public Pedido(String statusPedido, BigDecimal valorTotal) {
 		this.statusPedido = statusPedido;
 		this.valorTotal = valorTotal;
-		this.conta = conta;
 	}
 
 }

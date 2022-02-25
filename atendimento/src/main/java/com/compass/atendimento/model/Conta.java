@@ -1,6 +1,7 @@
 package com.compass.atendimento.model;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -34,13 +35,13 @@ public class Conta {
 	@NotNull
 	private boolean status;
 
-	@OneToMany
+	@OneToMany(mappedBy = "conta")
 	private List<Pedido> pedidos;
 
-	public Conta(Long idMesa, BigDecimal valorTotal, boolean status) {
-		this.mesa.setId(idMesa);
+	public Conta(BigDecimal valorTotal, boolean status) {
 		this.valorTotal = valorTotal;
 		this.status = status;
+		this.pedidos = new ArrayList<>();
 	}
 
 }
