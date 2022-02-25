@@ -4,6 +4,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.compass.gerenciamento.model.Produto;
+import com.compass.gerenciamento.repository.ProdutoRepository;
 
 import lombok.Setter;
 
@@ -19,11 +20,8 @@ public class ProdutoForm {
     @NotNull
     private boolean status;
     
-    public Produto converter() {
-		return null;
+    public Produto convert() {
+		return new Produto(nome, descricao, tipo, status);
     }
     
-    public Produto atualizar() {
-    	return null;
-    }
 }
