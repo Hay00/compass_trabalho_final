@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.compass.atendimento.model.Conta;
-import com.compass.atendimento.model.Mesa;
-import com.compass.atendimento.model.Pedido;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

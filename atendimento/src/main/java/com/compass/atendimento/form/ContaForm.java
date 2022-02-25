@@ -6,22 +6,24 @@ import javax.validation.constraints.NotNull;
 
 import com.compass.atendimento.model.Conta;
 
+import lombok.Getter;
 import lombok.Setter;
 
 @Setter
+@Getter
 public class ContaForm {
 
 	@NotNull
-	private Long idMesa;
+	private Long mesaId;
 
 	@NotNull
-	private boolean status;
+	private Boolean status;
 
 	@NotNull
 	private BigDecimal valorTotal;
 
 	public Conta converter() {
-		return new Conta(idMesa, valorTotal, status);
+		return new Conta(valorTotal, status);
 	}
 
 }

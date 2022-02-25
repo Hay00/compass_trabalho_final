@@ -2,6 +2,7 @@ package com.compass.atendimento.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -9,6 +10,7 @@ import com.compass.atendimento.dto.ContaDto;
 import com.compass.atendimento.form.ContaForm;
 import com.compass.atendimento.model.Conta;
 import com.compass.atendimento.repository.ContaRepository;
+import com.compass.atendimento.repository.MesaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,9 @@ public class ContaController {
 	@Autowired
 	private ContaRepository contaRepository;
 
+	@Autowired
+	MesaRepository mesaRepository;
+
 	@GetMapping
 	public List<ContaDto> all() {
 		return ContaDto.converter(contaRepository.findAll());
@@ -36,39 +41,43 @@ public class ContaController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<ContaDto> one(@PathVariable Long id) {
-		return contaRepository.findById(id)
-				.map(conta -> ResponseEntity.ok(new ContaDto(conta)))
+		return contaRepository.findById(id).map(conta -> ResponseEntity.ok(new ContaDto(conta)))
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@PostMapping
 	public ResponseEntity<ContaDto> newConta(@RequestBody @Valid ContaForm form, UriComponentsBuilder uriBuilder) {
 		Conta conta = form.converter();
-		contaRepository.save(conta);
-		URI uri = uriBuilder.path("/conta").buildAndExpand(conta.getId()).toUri();
-		return ResponseEntity.created(uri).body(new ContaDto(conta));
+		return mesaRepository.findById(form.getMesaId()).map(mesa -> {
+			conta.setMesa(mesa);
+			contaRepository.save(conta);
+			URI uri = uriBuilder.path("/conta").buildAndExpand(conta.getId()).toUri();
+			return ResponseEntity.created(uri).body(new ContaDto(conta));
+		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<ContaDto> updateConta(@PathVariable Long id, @RequestBody @Valid ContaForm form) {
-		Conta contaForm = form.converter();
-		return contaRepository.findById(id)
-				.map(conta -> {
-					conta.setValorTotal(contaForm.getValorTotal());
-					conta.setStatus(contaForm.isStatus());
-					contaRepository.save(conta);
-					return ResponseEntity.ok(new ContaDto(conta));
-				})
-				.orElseGet(() -> ResponseEntity.notFound().build());
+		Optional<Conta> optional = contaRepository.findById(id);
+		if (optional.isPresent()) {
+			return mesaRepository.findById(form.getMesaId()).map(mesa -> {
+				Conta conta = optional.get();
+				conta.setMesa(mesa);
+				conta.setValorTotal(form.getValorTotal());
+				conta.setStatus(form.getStatus());
+				contaRepository.save(conta);
+				return ResponseEntity.ok(new ContaDto(conta));
+			}).orElseGet(() -> ResponseEntity.notFound().build());
+
+		}
+		return ResponseEntity.notFound().build();
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Object> deleteConta(@PathVariable Long id) {
-		return contaRepository.findById(id)
-				.map(conta -> {
-					contaRepository.delete(conta);
-					return ResponseEntity.ok().build();
-				})
-				.orElseGet(() -> ResponseEntity.notFound().build());
+		return contaRepository.findById(id).map(conta -> {
+			contaRepository.delete(conta);
+			return ResponseEntity.ok().build();
+		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 }

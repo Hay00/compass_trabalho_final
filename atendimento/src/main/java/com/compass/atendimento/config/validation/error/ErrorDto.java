@@ -4,13 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
+@Getter
 public class ErrorDto {
 
-    @Getter
-    private String campo;
-
-    @Getter
-    private String erro;
-    
-    
+	private String campo;
+	private String erro;
 }

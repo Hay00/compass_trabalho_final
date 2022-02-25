@@ -16,23 +16,24 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ErrorValidationHandler {
 
-    @Autowired
-    private MessageSource messageSource;
+	@Autowired
+	private MessageSource messageSource;
 
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public List<ErrorDto> handleInvalidArgument(MethodArgumentNotValidException exception) {
-        List<ErrorDto> errors = new ArrayList<>();
-        exception.getBindingResult().getFieldErrors().forEach(e -> {
-            String message = messageSource.getMessage(e, LocaleContextHolder.getLocale());
-            errors.add(new ErrorDto(e.getField(), message));
-        });
-        return errors;
-    }
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public List<ErrorDto> handleInvalidArgument(MethodArgumentNotValidException exception) {
+		List<ErrorDto> errors = new ArrayList<>();
+		exception.getBindingResult().getFieldErrors().forEach(e -> {
+			String message = messageSource.getMessage(e, LocaleContextHolder.getLocale());
+			errors.add(new ErrorDto(e.getField(), message));
+		});
+		return errors;
+	}
 
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(PropertyReferenceException.class)
-    public ErrorDto handlePropertyReference(PropertyReferenceException exception) {
-        return new ErrorDto(exception.getPropertyName(), exception.getMessage());
-    }
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(PropertyReferenceException.class)
+	public ErrorDto handlePropertyReference(PropertyReferenceException exception) {
+		return new ErrorDto(exception.getPropertyName(), exception.getMessage());
+	}
+
 }

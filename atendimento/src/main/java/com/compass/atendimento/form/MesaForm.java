@@ -7,13 +7,18 @@ import com.compass.atendimento.model.Mesa;
 import lombok.Setter;
 
 @Setter
-@NotNull
 public class MesaForm {
 
 	@NotNull
-	private boolean status;
+	private String numero;
+
+	@NotNull
+	private Integer capacidade;
+
+	@NotNull
+	private Boolean ocupada;
 
 	public Mesa converter() {
-		return new Mesa(status);
+		return new Mesa(numero, capacidade, ocupada);
 	}
 }
