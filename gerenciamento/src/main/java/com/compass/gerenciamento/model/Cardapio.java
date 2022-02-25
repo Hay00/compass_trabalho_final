@@ -19,20 +19,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Cardapio {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @NotNull @NotEmpty
-    private String nome;
-    
-    @OneToMany
-    private List<Produto> produtos;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@NotNull
+	@NotEmpty
+	private String nome;
+
+	@OneToMany
+	private List<Produto> produtos;
 
 	public Cardapio(String nome, List<Produto> produto) {
 		this.nome = nome;
 		this.produtos = produto;
 	}
-    
-    
 }
