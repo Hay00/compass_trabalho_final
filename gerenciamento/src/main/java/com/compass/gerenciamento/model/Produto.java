@@ -1,5 +1,7 @@
 package com.compass.gerenciamento.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,25 +19,33 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Produto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @NotNull @NotEmpty
-    private String nome;
-    @NotNull @NotEmpty
-    private String descricao;
-    @NotNull @NotEmpty
-    private String tipo;
-    @NotNull
-    private boolean status;
-    
-    
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@NotNull
+	@NotEmpty
+	private String nome;
+
+	@NotNull
+	@NotEmpty
+	private String descricao;
+
+	@NotNull
+	private BigDecimal preco;
+
+	@NotNull
+	@NotEmpty
+	private String tipo;
+
+	@NotNull
+	private boolean status;
+
 	public Produto(String nome, String descricao, String tipo, boolean status) {
 		this.nome = nome;
 		this.descricao = descricao;
 		this.tipo = tipo;
 		this.status = status;
 	}
-	
-    
+
 }

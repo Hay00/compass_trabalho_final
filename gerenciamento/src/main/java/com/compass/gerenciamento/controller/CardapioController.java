@@ -29,7 +29,7 @@ import com.compass.gerenciamento.repository.CardapioRepository;
 import com.compass.gerenciamento.repository.ProdutoRepository;
 
 @RestController
-@RequestMapping("gerenciamento/cardapio")
+@RequestMapping("/cardapios")
 public class CardapioController {
 
 	@Autowired
@@ -53,7 +53,7 @@ public class CardapioController {
 		Cardapio cardapio = form.convert();
 		cardapioRepository.save(cardapio);
 
-		URI uri = UriBuilder.path("/gerenciamento/cardapio/{id}").buildAndExpand(cardapio.getId()).toUri();
+		URI uri = UriBuilder.path("/cardapios/{id}").buildAndExpand(cardapio.getId()).toUri();
 		return ResponseEntity.created(uri).body(new CardapioDto(cardapio));
 	}
 
@@ -89,7 +89,7 @@ public class CardapioController {
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
-	@PostMapping("/{id}/produto")
+	@PostMapping("/{id}/produtos")
 	@Transactional
 	@CacheEvict(value = "cachedCardapios", allEntries = true)
 	public ResponseEntity<CardapioDto> vincularProdutoAoCardapio(@PathVariable Long id,
