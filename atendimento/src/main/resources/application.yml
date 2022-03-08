@@ -1,29 +1,30 @@
 server:
     port: 8080
 
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
+
 spring:
     application:
         name: "atendimento"
-    datasource:
-      driverClassName: org.h2.Driver
-      url: 'jdbc:h2:mem:restaurante'
-      username: sa
-    jpa:
-      defer-datasource-initialization: true
-      database-platform: org.hibernate.dialect.H2Dialect
-      hibernate:
-        ddl-auto: update
-      properties:
-        hibernate:
-          show_sql: true
-          format_sql: true
-    h2:
-      console:
-        enabled: true
-        path: /h2-console
-        
+    data:
+        mongodb:
+            authentication-database: admin
+            username: rootuser
+            password: rootpass
+            database: avaliacaoiv
+            port: 27017
+            host: localhost
+            auto-index-creation: true
+
     mvc:
-      pathmatch:
+        pathmatch:
             matching-strategy: ant-path-matcher
 
 eureka:

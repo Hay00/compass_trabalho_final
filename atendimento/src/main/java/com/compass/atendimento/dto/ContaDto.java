@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ContaDto {
-	private Long id;
-	private Long idMesa;
+	private String id;
+	private String idMesa;
 	private BigDecimal valorTotal;
 	private boolean status;
 	private List<PedidoDto> pedidos;

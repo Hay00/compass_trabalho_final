@@ -1,6 +1,7 @@
 package com.compass.atendimento.form;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -15,7 +16,7 @@ import lombok.Setter;
 public class PedidoForm {
 
 	@NotNull
-	private Long contaId;
+	private String contaId;
 
 	@NotNull
 	@StatusPedidoAnnotation
@@ -23,6 +24,9 @@ public class PedidoForm {
 
 	@NotNull
 	private BigDecimal valorTotal;
+
+	@NotNull
+	private List<Long> produtosIds;
 
 	public Pedido converter() {
 		return new Pedido(statusPedido, valorTotal);
