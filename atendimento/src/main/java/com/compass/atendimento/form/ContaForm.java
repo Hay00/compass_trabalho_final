@@ -14,7 +14,7 @@ import lombok.Setter;
 public class ContaForm {
 
 	@NotNull
-	private Long mesaId;
+	private String mesaId;
 
 	@NotNull
 	private Boolean status;

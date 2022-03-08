@@ -15,16 +15,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PedidoDto {
 
-	private Long id;
-	private Long conta;
+	private String id;
+	private String conta;
 	private String statusPedido;
 	private BigDecimal valorTotal;
+	private List<ProdutoDto> produtos;
 
 	public PedidoDto(Pedido pedido) {
 		this.id = pedido.getId();
 		this.statusPedido = pedido.getStatusPedido();
 		this.valorTotal = pedido.getValorTotal();
 		this.conta = pedido.getConta().getId();
+		this.produtos = pedido.getProdutos().stream().map(ProdutoDto::new).collect(Collectors.toList());
 	}
 
 	public static List<PedidoDto> converter(List<Pedido> pedidos) {

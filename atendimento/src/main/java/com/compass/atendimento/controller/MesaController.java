@@ -36,7 +36,7 @@ public class MesaController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<MesaDto> one(@PathVariable Long id) {
+	public ResponseEntity<MesaDto> one(@PathVariable String id) {
 		// TODO: Implementar filtro com somente contas ativas
 		return mesaRepository.findById(id).map(mesa -> ResponseEntity.ok(new MesaDto(mesa)))
 				.orElseGet(() -> ResponseEntity.notFound().build());
@@ -51,7 +51,7 @@ public class MesaController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<MesaDto> updateMesa(@PathVariable Long id, @RequestBody @Valid MesaForm form) {
+	public ResponseEntity<MesaDto> updateMesa(@PathVariable String id, @RequestBody @Valid MesaForm form) {
 		Mesa mesaForm = form.converter();
 		return mesaRepository.findById(id).map(mesa -> {
 			mesa.setNumero(mesaForm.getNumero());
@@ -63,7 +63,7 @@ public class MesaController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Object> deleteMesa(@PathVariable Long id) {
+	public ResponseEntity<Object> deleteMesa(@PathVariable String id) {
 		return mesaRepository.findById(id).map(mesa -> {
 			mesaRepository.deleteById(id);
 			return ResponseEntity.ok().build();

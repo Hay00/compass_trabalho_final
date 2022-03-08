@@ -40,7 +40,7 @@ public class ContaController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<ContaDto> one(@PathVariable Long id) {
+	public ResponseEntity<ContaDto> one(@PathVariable String id) {
 		return contaRepository.findById(id).map(conta -> ResponseEntity.ok(new ContaDto(conta)))
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
@@ -57,7 +57,7 @@ public class ContaController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<ContaDto> updateConta(@PathVariable Long id, @RequestBody @Valid ContaForm form) {
+	public ResponseEntity<ContaDto> updateConta(@PathVariable String id, @RequestBody @Valid ContaForm form) {
 		Optional<Conta> optional = contaRepository.findById(id);
 		if (optional.isPresent()) {
 			return mesaRepository.findById(form.getMesaId()).map(mesa -> {
@@ -74,7 +74,7 @@ public class ContaController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Object> deleteConta(@PathVariable Long id) {
+	public ResponseEntity<Object> deleteConta(@PathVariable String id) {
 		return contaRepository.findById(id).map(conta -> {
 			contaRepository.delete(conta);
 			return ResponseEntity.ok().build();
