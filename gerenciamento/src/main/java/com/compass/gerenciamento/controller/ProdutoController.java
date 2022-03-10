@@ -27,65 +27,69 @@ import com.compass.gerenciamento.repository.CardapioRepository;
 import com.compass.gerenciamento.repository.ProdutoRepository;
 
 @RestController
-@RequestMapping("gerenciamento/produto")
+@RequestMapping("/produtos")
 public class ProdutoController {
-    
+
 	@Autowired
 	ProdutoRepository produtoRepository;
-	
+
 	@Autowired
 	CardapioRepository cardapioRepository;
-	
+
 	@GetMapping
 	public List<ProdutoDto> list() {
-		List<Produto> produtos = produtoRepository.findAll();
-		return ProdutoDto.convert(produtos);
+		return ProdutoDto.convert(produtoRepository.findAll());
 	}
-	
+
+	@GetMapping("/find/{ids}")
+	public List<ProdutoDto> listByIds(@PathVariable Long[] ids) {
+		return ProdutoDto.convert(produtoRepository.findAllById(ids));
+	}
+
 	@PostMapping
 	@Transactional
 	@CacheEvict(value = "cachedProdutos", allEntries = true)
 	public ResponseEntity<ProdutoDto> create(@RequestBody @Valid ProdutoForm form,
 			UriComponentsBuilder UriBuilder) {
-		
+
 		Produto produto = form.convert();
 		produtoRepository.save(produto);
-		
-		URI uri = UriBuilder.path("/gerenciamento/produto/{id}").buildAndExpand(produto.getId()).toUri();
+
+		URI uri = UriBuilder.path("/produtos/{id}").buildAndExpand(produto.getId()).toUri();
 		return ResponseEntity.created(uri).body(new ProdutoDto(produto));
 	}
-	
+
 	@GetMapping("/{id}")
 	public ResponseEntity<ProdutoDto> get(@PathVariable Long id) {
 		Optional<Produto> produto = produtoRepository.findById(id);
-		if(produto.isPresent()) {
+		if (produto.isPresent()) {
 			return ResponseEntity.ok(new ProdutoDto(produto.get()));
 		}
 		return ResponseEntity.notFound().build();
 	}
-	
+
 	@PutMapping("/{id}")
 	@Transactional
 	@CacheEvict(value = "cachedProdutos", allEntries = true)
 	public ResponseEntity<ProdutoDto> update(@PathVariable Long id, @RequestBody ProdutoForm form) {
-			Produto produtoForm = form.convert();
-			return produtoRepository.findById(id).map(produto -> {
-	                    produto.setNome(produtoForm.getNome());
-	                    produto.setDescricao(produtoForm.getDescricao());
-	                    produto.setTipo(produtoForm.getTipo());
-	                    produto.setStatus(produtoForm.isStatus());
-	                    produtoRepository.save(produto);
-	                    return ResponseEntity.ok(new ProdutoDto(produto));
-	                }).orElseGet(() -> ResponseEntity.notFound().build());
+		Produto produtoForm = form.convert();
+		return produtoRepository.findById(id).map(produto -> {
+			produto.setNome(produtoForm.getNome());
+			produto.setDescricao(produtoForm.getDescricao());
+			produto.setTipo(produtoForm.getTipo());
+			produto.setStatus(produtoForm.isStatus());
+			produtoRepository.save(produto);
+			return ResponseEntity.ok(new ProdutoDto(produto));
+		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
-	
+
 	@DeleteMapping("/{id}")
 	@Transactional
 	@CacheEvict(value = "cachedProdutos", allEntries = true)
-	public ResponseEntity<Object> delete(@PathVariable Long id){
+	public ResponseEntity<Object> delete(@PathVariable Long id) {
 		return produtoRepository.findById(id).map(partido -> {
-                    produtoRepository.deleteById(id);
-                    return ResponseEntity.ok().build();
-                }).orElseGet(() -> ResponseEntity.notFound().build());
-    }
+			produtoRepository.deleteById(id);
+			return ResponseEntity.ok().build();
+		}).orElseGet(() -> ResponseEntity.notFound().build());
+	}
 }

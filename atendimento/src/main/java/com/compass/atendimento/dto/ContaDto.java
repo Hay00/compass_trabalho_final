@@ -14,15 +14,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ContaDto {
-	private Long id;
-	private Long idMesa;
+	private String id;
+	private String mesaId;
 	private BigDecimal valorTotal;
 	private boolean status;
 	private List<PedidoDto> pedidos;
 
 	public ContaDto(Conta conta) {
 		this.id = conta.getId();
-		this.idMesa = conta.getMesa().getId();
+		this.mesaId = conta.getMesa().getId();
 		this.valorTotal = conta.getValorTotal();
 		this.status = conta.isStatus();
 		this.pedidos = PedidoDto.converter(conta.getPedidos());

@@ -1,6 +1,5 @@
 package com.compass.atendimento.controller;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -8,7 +7,7 @@ import javax.validation.Valid;
 import com.compass.atendimento.dto.MesaDto;
 import com.compass.atendimento.form.MesaForm;
 import com.compass.atendimento.model.Mesa;
-import com.compass.atendimento.repository.MesaRepository;
+import com.compass.atendimento.service.MesaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,46 +26,32 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class MesaController {
 
 	@Autowired
-	private MesaRepository mesaRepository;
+	private MesaService mesaService;
 
 	@GetMapping
 	public List<MesaDto> all() {
-		// TODO: Implementar filtro com somente contas ativas
-		return MesaDto.converter(mesaRepository.findAll());
+		return MesaDto.converter(mesaService.findAll());
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<MesaDto> one(@PathVariable Long id) {
-		// TODO: Implementar filtro com somente contas ativas
-		return mesaRepository.findById(id).map(mesa -> ResponseEntity.ok(new MesaDto(mesa)))
-				.orElseGet(() -> ResponseEntity.notFound().build());
+	public ResponseEntity<MesaDto> one(@PathVariable String id) {
+		return ResponseEntity.ok(new MesaDto(mesaService.findById(id)));
 	}
 
 	@PostMapping
 	public ResponseEntity<MesaDto> newMesa(@RequestBody @Valid MesaForm form, UriComponentsBuilder uriBuilder) {
 		Mesa mesa = form.converter();
-		mesaRepository.save(mesa);
-		URI uri = uriBuilder.path("/mesa").buildAndExpand(mesa.getId()).toUri();
-		return ResponseEntity.created(uri).body(new MesaDto(mesa));
+		return ResponseEntity.created(uriBuilder.path("/mesas").buildAndExpand(mesa.getId()).toUri())
+				.body(new MesaDto(mesaService.save(mesa)));
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<MesaDto> updateMesa(@PathVariable Long id, @RequestBody @Valid MesaForm form) {
-		Mesa mesaForm = form.converter();
-		return mesaRepository.findById(id).map(mesa -> {
-			mesa.setNumero(mesaForm.getNumero());
-			mesa.setCapacidade(mesaForm.getCapacidade());
-			mesa.setOcupada(mesaForm.isOcupada());
-			mesaRepository.save(mesa);
-			return ResponseEntity.ok(new MesaDto(mesa));
-		}).orElseGet(() -> ResponseEntity.notFound().build());
+	public ResponseEntity<MesaDto> updateMesa(@PathVariable String id, @RequestBody @Valid MesaForm form) {
+		return ResponseEntity.ok(new MesaDto(mesaService.update(id, form.converter())));
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Object> deleteMesa(@PathVariable Long id) {
-		return mesaRepository.findById(id).map(mesa -> {
-			mesaRepository.deleteById(id);
-			return ResponseEntity.ok().build();
-		}).orElseGet(() -> ResponseEntity.notFound().build());
+	public void deleteMesa(@PathVariable String id) {
+		mesaService.delete(id);
 	}
 }

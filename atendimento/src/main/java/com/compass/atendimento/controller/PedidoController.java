@@ -1,16 +1,13 @@
 package com.compass.atendimento.controller;
 
-import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
 import com.compass.atendimento.dto.PedidoDto;
 import com.compass.atendimento.form.PedidoForm;
 import com.compass.atendimento.model.Pedido;
-import com.compass.atendimento.repository.ContaRepository;
-import com.compass.atendimento.repository.PedidoRepository;
+import com.compass.atendimento.service.PedidoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,54 +26,33 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class PedidoController {
 
 	@Autowired
-	private PedidoRepository pedidoRepository;
-
-	@Autowired
-	private ContaRepository contaRepository;
+	private PedidoService pedidoService;
 
 	@GetMapping
 	public List<PedidoDto> all() {
-		return PedidoDto.converter(pedidoRepository.findAll());
+		return PedidoDto.converter(pedidoService.findAll());
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<PedidoDto> one(@PathVariable Long id) {
-		return pedidoRepository.findById(id).map(pedido -> ResponseEntity.ok(new PedidoDto(pedido)))
-				.orElseGet(() -> ResponseEntity.notFound().build());
+	public ResponseEntity<PedidoDto> one(@PathVariable String id) {
+		return ResponseEntity.ok(new PedidoDto(pedidoService.findById(id)));
 	}
 
 	@PostMapping
 	public ResponseEntity<PedidoDto> newPedido(@RequestBody @Valid PedidoForm form, UriComponentsBuilder uriBuilder) {
 		Pedido pedido = form.converter();
-		return contaRepository.findById(form.getContaId()).map(conta -> {
-			pedido.setConta(conta);
-			pedidoRepository.save(pedido);
-			URI uri = uriBuilder.path("/pedidos").buildAndExpand(pedido.getId()).toUri();
-			return ResponseEntity.created(uri).body(new PedidoDto(pedido));
-		}).orElseGet(() -> ResponseEntity.notFound().build());
+		return ResponseEntity.created(uriBuilder.path("/pedidos").buildAndExpand(pedido.getId()).toUri())
+				.body(new PedidoDto(pedidoService.save(pedido, form.getContaId(), form.getProdutos())));
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<PedidoDto> updatePedido(@PathVariable Long id, @RequestBody @Valid PedidoForm form) {
-		Optional<Pedido> optional = pedidoRepository.findById(id);
-		if (optional.isPresent()) {
-			return contaRepository.findById(form.getContaId()).map(conta -> {
-				Pedido pedido = optional.get();
-				pedido.setConta(conta);
-				pedido.setValorTotal(form.getValorTotal());
-				pedido.setStatusPedido(form.getStatusPedido());
-				pedidoRepository.save(pedido);
-				return ResponseEntity.ok(new PedidoDto(pedido));
-			}).orElseGet(() -> ResponseEntity.notFound().build());
-		}
-		return ResponseEntity.notFound().build();
+	public ResponseEntity<PedidoDto> updatePedido(@PathVariable String id, @RequestBody @Valid PedidoForm form) {
+		Pedido pedido = form.converter();
+		return ResponseEntity.ok(new PedidoDto(pedidoService.update(id, pedido, form.getProdutos(), form.getContaId())));
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Object> deletePedido(@PathVariable Long id) {
-		return pedidoRepository.findById(id).map(pedido -> {
-			pedidoRepository.delete(pedido);
-			return ResponseEntity.noContent().build();
-		}).orElseGet(() -> ResponseEntity.notFound().build());
+	public void deletePedido(@PathVariable String id) {
+		pedidoService.delete(id);
 	}
 }

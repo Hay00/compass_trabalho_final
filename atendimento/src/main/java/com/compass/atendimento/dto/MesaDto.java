@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MesaDto {
 
-	private Long id;
+	private String id;
 	private String numero;
 	private Integer capacidade;
 	private boolean ocupada;
