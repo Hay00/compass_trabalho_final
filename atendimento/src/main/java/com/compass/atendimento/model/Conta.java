@@ -15,19 +15,20 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "conta")
+@Document
 public class Conta {
 
 	@Id
 	private String id;
 
+	@DBRef
 	private Mesa mesa;
 
 	private BigDecimal valorTotal;
 
 	private boolean status;
 
-	@DBRef(db = "pedido")
+	@DBRef
 	private List<Pedido> pedidos;
 
 	public Conta(BigDecimal valorTotal, boolean status) {

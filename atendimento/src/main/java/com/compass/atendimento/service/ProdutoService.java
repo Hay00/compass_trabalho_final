@@ -14,7 +14,7 @@ public class ProdutoService {
 	@Autowired
 	private ProdutoClient produtoClient;
 
-	public List<ProdutoDto> getProdutosByIds(List<Long> ids) {
+	public List<ProdutoDto> findAllByIds(Long[] ids) {
 		return produtoClient.getProdutosByIds(ids);
 	}
 

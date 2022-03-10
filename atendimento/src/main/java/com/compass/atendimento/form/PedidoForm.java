@@ -25,6 +25,7 @@ public class PedidoForm {
 	@NotNull
 	private BigDecimal valorTotal;
 
+	// TODO: Adicionar quantidades de produtos
 	@NotNull
 	private List<Long> produtosIds;
 

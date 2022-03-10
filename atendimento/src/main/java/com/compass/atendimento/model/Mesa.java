@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "mesa")
+@Document
 public class Mesa {
 
 	@Id
@@ -26,7 +26,7 @@ public class Mesa {
 
 	private boolean ocupada = false;
 
-	@DBRef(db = "conta")
+	@DBRef
 	private List<Conta> contas;
 
 	public Mesa(String numero, int capacidade, boolean status) {

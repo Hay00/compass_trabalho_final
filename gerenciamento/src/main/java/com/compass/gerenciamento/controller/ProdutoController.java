@@ -38,8 +38,12 @@ public class ProdutoController {
 
 	@GetMapping
 	public List<ProdutoDto> list() {
-		List<Produto> produtos = produtoRepository.findAll();
-		return ProdutoDto.convert(produtos);
+		return ProdutoDto.convert(produtoRepository.findAll());
+	}
+
+	@GetMapping("/find/{ids}")
+	public List<ProdutoDto> listByIds(@PathVariable Long[] ids) {
+		return ProdutoDto.convert(produtoRepository.findAllById(ids));
 	}
 
 	@PostMapping
