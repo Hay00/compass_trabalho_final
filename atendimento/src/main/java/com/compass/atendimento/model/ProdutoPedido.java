@@ -1,6 +1,8 @@
 package com.compass.atendimento.model;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.compass.atendimento.dto.ProdutoDto;
 
@@ -23,5 +25,9 @@ public class ProdutoPedido {
 		this.nome = produto.getNome();
 		this.preco = produto.getPreco();
 		this.quantidade = 1L;
+	}
+
+	public static List<ProdutoPedido> converter(List<ProdutoDto> pedidosProdutos) {
+		return pedidosProdutos.stream().map(ProdutoPedido::new).collect(Collectors.toList());
 	}
 }

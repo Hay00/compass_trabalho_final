@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ public class Pedido {
 
 	private BigDecimal valorTotal;
 
+	@DBRef
 	private Conta conta;
 
 	private List<ProdutoPedido> produtos;
