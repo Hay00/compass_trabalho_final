@@ -41,16 +41,14 @@ public class PedidoController {
 	@PostMapping
 	public ResponseEntity<PedidoDto> newPedido(@RequestBody @Valid PedidoForm form, UriComponentsBuilder uriBuilder) {
 		Pedido pedido = form.converter();
-		Long[] produtosIds = form.getProdutosIds().toArray(new Long[0]);
 		return ResponseEntity.created(uriBuilder.path("/pedidos").buildAndExpand(pedido.getId()).toUri())
-				.body(new PedidoDto(pedidoService.save(pedido, form.getContaId(), produtosIds)));
+				.body(new PedidoDto(pedidoService.save(pedido, form.getContaId(), form.getProdutos())));
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<PedidoDto> updatePedido(@PathVariable String id, @RequestBody @Valid PedidoForm form) {
 		Pedido pedido = form.converter();
-		Long[] produtosIds = form.getProdutosIds().toArray(new Long[0]);
-		return ResponseEntity.ok(new PedidoDto(pedidoService.update(id, pedido, produtosIds, form.getContaId())));
+		return ResponseEntity.ok(new PedidoDto(pedidoService.update(id, pedido, form.getProdutos(), form.getContaId())));
 	}
 
 	@DeleteMapping("/{id}")

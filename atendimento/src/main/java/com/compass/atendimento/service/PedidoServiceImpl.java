@@ -1,9 +1,9 @@
 package com.compass.atendimento.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
+import com.compass.atendimento.form.ProdutosForm;
 import com.compass.atendimento.model.Pedido;
 import com.compass.atendimento.model.ProdutoPedido;
 import com.compass.atendimento.repository.ContaRepository;
@@ -37,9 +37,15 @@ public class PedidoServiceImpl implements PedidoService {
 	}
 
 	@Override
-	public Pedido save(Pedido pedido, String contaId, Long[] produtosIds) {
+	public Pedido save(Pedido pedido, String contaId, List<ProdutosForm> formList) {
+		Long[] produtosIds = formList.stream().map(ProdutosForm::getId).toArray(Long[]::new);
 		return contaRepository.findById(contaId).map(conta -> {
-			pedido.setProdutos(ProdutoPedido.converter(produtoService.findAllByIds(produtosIds)));
+			List<ProdutoPedido> produtos = ProdutoPedido.converter(produtoService.findAllByIds(produtosIds));
+			// Adiciona quantidade de cada produto
+			produtos.forEach(produto -> produto.setQuantidade(formList.stream()
+					.filter(p -> p.getId().equals(produto.getId())).findFirst().get().getQuantidade()));
+			pedido.setProdutos(produtos);
+			pedido.setValorTotal(this.sumProdutos(produtos));
 			pedido.setConta(conta);
 			pedidoRepository.save(pedido);
 			conta.getPedidos().add(pedido);
@@ -49,19 +55,15 @@ public class PedidoServiceImpl implements PedidoService {
 	}
 
 	@Override
-	public Pedido update(String id, Pedido newPedido, Long[] produtosIds, String contaId) {
+	public Pedido update(String id, Pedido newPedido, List<ProdutosForm> formList, String contaId) {
+		Long[] produtosIds = formList.stream().map(ProdutosForm::getId).toArray(Long[]::new);
 		return pedidoRepository.findById(id).map(pedido -> {
-			try {
-				List<ProdutoPedido> produtos = ProdutoPedido.converter(produtoService.findAllByIds(produtosIds));
-				pedido.setProdutos(produtos);
-				BigDecimal valorTotal = new BigDecimal(0);
-				for (ProdutoPedido p : produtos) {
-					valorTotal = valorTotal.add(p.getPreco().multiply(BigDecimal.valueOf(p.getQuantidade())));
-				}
-				pedido.setValorTotal(valorTotal);
-			} catch (Exception e) {
-				pedido.setProdutos(new ArrayList<>());
-			}
+			List<ProdutoPedido> produtos = ProdutoPedido.converter(produtoService.findAllByIds(produtosIds));
+			// Adiciona quantidade de cada produto
+			produtos.forEach(produto -> produto.setQuantidade(formList.stream()
+					.filter(p -> p.getId().equals(produto.getId())).findFirst().get().getQuantidade()));
+			pedido.setProdutos(produtos);
+			pedido.setValorTotal(this.sumProdutos(produtos));
 			pedido.setStatusPedido(newPedido.getStatusPedido());
 
 			// Validando se a conta do pedido continua a mesma
@@ -90,6 +92,11 @@ public class PedidoServiceImpl implements PedidoService {
 	@Override
 	public void delete(String id) {
 		pedidoRepository.findById(id).ifPresent(pedido -> pedidoRepository.delete(pedido));
+	}
+
+	private BigDecimal sumProdutos(List<ProdutoPedido> produtos) {
+		return produtos.stream().map(p -> p.getPreco().multiply(new BigDecimal(p.getQuantidade())))
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}
 
 }

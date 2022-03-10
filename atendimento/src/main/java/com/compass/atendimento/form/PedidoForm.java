@@ -27,7 +27,7 @@ public class PedidoForm {
 
 	// TODO: Adicionar quantidades de produtos
 	@NotNull
-	private List<Long> produtosIds;
+	private List<ProdutosForm> produtos;
 
 	public Pedido converter() {
 		return new Pedido(statusPedido, valorTotal);
