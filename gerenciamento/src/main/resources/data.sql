@@ -6,3 +6,4 @@ VALUES
     ('Guaraná', 'Refrigerante', 6.90, 1, 'Bebida'),
     ('Hamburger', 'Hamburger com carne', 15.13, 1, 'Refeição'),
     ('Barquete', 'Com maiosene', 3.50, 1, 'Aperitivo');
+INSERT INTO USUARIO (email, senha) VALUES ('usuario@email.com', '$2a$10$woVnwqQREmN0WvAVjUxfVuokhxk1aK1m1dy8t.PjAkAxYnjZUT8re')

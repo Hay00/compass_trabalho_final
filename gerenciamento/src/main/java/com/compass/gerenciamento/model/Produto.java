@@ -41,10 +41,11 @@ public class Produto {
 	@NotNull
 	private boolean status;
 
-	public Produto(String nome, String descricao, String tipo, boolean status) {
+	public Produto(String nome, String descricao, String tipo, BigDecimal preco, boolean status) {
 		this.nome = nome;
 		this.descricao = descricao;
 		this.tipo = tipo;
+		this.preco = preco;
 		this.status = status;
 	}
 
