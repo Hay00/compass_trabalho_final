@@ -1,6 +1,7 @@
 package com.compass.gerenciamento.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,7 +96,7 @@ public class CardapioController {
 	public ResponseEntity<CardapioDto> vincularProdutoAoCardapio(@PathVariable Long id,
 			@RequestBody @Valid ListaProdutosForm form) {
 		return cardapioRepository.findById(id).map(cardapio -> {
-			List<Produto> produtos = cardapio.getProdutos();
+			List<Produto> produtos = new ArrayList<>();
 			form.getProdutos().forEach(idProduto -> {
 				Optional<Produto> optional = produtoRepository.findById(idProduto);
 				if (optional.isPresent()) {

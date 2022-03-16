@@ -14,13 +14,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.compass.gerenciamento.model.Usuario;
 import com.compass.gerenciamento.repository.UsuarioRepository;
 
-public class AutenticacaoViaTokenFilter extends OncePerRequestFilter {
-	
+public class TokenFilter extends OncePerRequestFilter {
+
 	private TokenService tokenService;
-	
+
 	private UsuarioRepository repository;
-	
-	public AutenticacaoViaTokenFilter(TokenService tokenService, UsuarioRepository repository) {
+
+	public TokenFilter(TokenService tokenService, UsuarioRepository repository) {
 		this.tokenService = tokenService;
 		this.repository = repository;
 	}
@@ -28,14 +28,14 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		
+
 		String token = recuperarToken(request);
 		boolean valido = tokenService.isTokenValido(token);
 		System.out.println(valido);
 		if(valido) {
 			autenticarCliente(token);
 		}
-		
+
 		filterChain.doFilter(request, response);
 	}
 
@@ -51,10 +51,10 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter {
 		if (token == null || token.isEmpty() || !token.startsWith("Bearer ")) {
 			return null;
 		}
-		
+
 		return token.substring(7, token.length());
 	}
-	
-	
-	
+
+
+
 }

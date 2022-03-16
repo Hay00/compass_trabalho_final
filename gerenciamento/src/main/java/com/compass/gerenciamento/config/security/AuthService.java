@@ -12,17 +12,15 @@ import com.compass.gerenciamento.model.Usuario;
 import com.compass.gerenciamento.repository.UsuarioRepository;
 
 @Service
-public class AutenticacaoService implements UserDetailsService {
-	
+public class AuthService implements UserDetailsService {
+
 	@Autowired
 	private UsuarioRepository repository;
-	
+
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<Usuario> usuario = repository.findByEmail(username);
-		if(usuario.isPresent()) {
-			return usuario.get();
-		}
-	throw new UsernameNotFoundException("Dados inválidos!");
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		Optional<Usuario> usuario = repository.findByEmail(email);
+		if (usuario.isPresent()) return usuario.get();
+		throw new UsernameNotFoundException("Dados inválidos!");
 	}
 }

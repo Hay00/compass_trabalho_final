@@ -1,5 +1,7 @@
 package com.compass.gerenciamento.form;
 
+import java.math.BigDecimal;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -23,9 +25,12 @@ public class ProdutoForm {
 	private String tipo;
 
 	@NotNull
+	private BigDecimal preco;
+
+	@NotNull
 	private boolean status;
 
 	public Produto convert() {
-		return new Produto(nome, descricao, tipo, status);
+		return new Produto(nome, descricao, tipo, preco, status);
 	}
 }

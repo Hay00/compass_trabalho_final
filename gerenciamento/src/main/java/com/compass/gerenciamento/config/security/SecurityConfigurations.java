@@ -19,47 +19,49 @@ import com.compass.gerenciamento.repository.UsuarioRepository;
 @EnableWebSecurity
 @Configuration
 public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
-	
+
 	@Autowired
-	private AutenticacaoService autenticacaoService;
-	
+	private AuthService authService;
+
 	@Autowired
 	private TokenService tokenService;
-	
+
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-	
+
 	@Override
 	@Bean
 	protected AuthenticationManager authenticationManager() throws Exception {
 		return super.authenticationManager();
 	}
-	
+
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(autenticacaoService).passwordEncoder(new BCryptPasswordEncoder());
+		auth.userDetailsService(authService).passwordEncoder(new BCryptPasswordEncoder());
 	}
-	
+
 	public static void main(String[] args) {
 		System.out.println(new BCryptPasswordEncoder().encode("123456"));
 	}
-	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests()
-		.antMatchers(HttpMethod.GET, "/produtos").permitAll()
-		.antMatchers(HttpMethod.GET, "/produtos/**").permitAll()
-		.antMatchers(HttpMethod.GET, "/cardapios").permitAll()
-		.antMatchers(HttpMethod.GET, "/cardapios/**").permitAll()
-		.antMatchers(HttpMethod.POST, "/auth").permitAll()
-		.anyRequest().authenticated()
-		.and().csrf().disable()
-		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		.and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, usuarioRepository), UsernamePasswordAuthenticationFilter.class);
+				.antMatchers("/usuarios").permitAll()
+				.antMatchers(HttpMethod.GET, "/produtos").permitAll()
+				.antMatchers(HttpMethod.GET, "/produtos/**").permitAll()
+				.antMatchers(HttpMethod.GET, "/cardapios").permitAll()
+				.antMatchers(HttpMethod.GET, "/cardapios/**").permitAll()
+				.antMatchers(HttpMethod.POST, "/auth").permitAll()
+				.anyRequest().authenticated()
+				.and().csrf().disable()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and().addFilterBefore(new TokenFilter(tokenService, usuarioRepository),
+						UsernamePasswordAuthenticationFilter.class);
 	}
-	
+
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		
+		web.ignoring().antMatchers("/h2-console/**");
 	}
 }
